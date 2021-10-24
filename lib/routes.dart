@@ -9,8 +9,10 @@ import 'views/home/home.view.dart';
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/':
-        return MaterialPageRoute(builder: (_) => HomeView());
+      case HomeView.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const HomeView(),
+        );
       default:
         return MaterialPageRoute(builder: (_) {
           return EmptyView();

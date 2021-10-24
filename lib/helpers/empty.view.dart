@@ -21,7 +21,9 @@ class _EmptyViewState extends State<EmptyView> {
     return BaseView<EmptyViewModel>(
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(),
-        body: ListBody(),
+        body: Column(
+          children: [],
+        ),
       ),
     );
   }

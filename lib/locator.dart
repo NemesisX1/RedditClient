@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:redditech/helpers/empty.view.dart';
 import 'services/firebase/auth.service.dart';
 import 'services/api/api.service.dart';
 import 'services/local/local.service.dart';
@@ -14,4 +15,5 @@ void setupLocator() {
 
   // Here you register all your viewmodels
   locator.registerFactory(() => LoginViewModel());
+  locator.registerFactory(() => EmptyViewModel());
 }

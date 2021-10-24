@@ -1,8 +1,9 @@
-import 'package:firebase_core/firebase_core.dart';
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redditech/models/appuser.model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'helpers/theme.dart';
 import 'locator.dart';
 import 'routes.dart';
 
@@ -15,6 +16,7 @@ globalInitializer() async {
   await Hive.initFlutter();
   Hive.registerAdapter(AppUserAdapter());
   await Hive.openBox<AppUser>("user");
+  await dotenv.load(fileName: ".env");
 }
 
 void main() async {
@@ -28,10 +30,21 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData lightTheme = ThemeData(
+      fontFamily: 'Poppins',
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+      ),
+    );
+
+    ThemeData darkTheme = ThemeData(
+      fontFamily: 'Poppins',
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Redditech',
-      theme: appTheme,
+      theme: lightTheme,
       onGenerateRoute: (settings) => AppRouter.generateRoute(settings),
     );
   }

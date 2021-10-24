@@ -1,5 +1,5 @@
 import 'package:redditech/services/api/api.service.dart';
 
-extension OAuth on ApiService {
-  getToken() {}
+extension Get on ApiService {
+  get() {}
 }
