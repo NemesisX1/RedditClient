@@ -1,36 +1,44 @@
+import 'dart:developer';
 import 'package:redditech/models/appuser.model.dart';
 import 'package:redditech/services/base.service.dart';
 import 'package:hive/hive.dart';
 
 /// [LocalService]
 /// A base class to interact with local storage with Hive
+
+class HiveClassName {
+  static const String user = "user";
+  static const String token = "token";
+}
+
 class LocalService extends BaseService {
-  saveUser(AppUser user) async {
+  save<T extends HiveObject>(T data, String className) async {
     try {
-      await Hive.openBox<AppUser>("user");
+      await Hive.openBox<T>(className);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
-    Box<AppUser> box = Hive.box('user');
-    if (box.isNotEmpty)
-      await box.putAt(0, user);
-    else
-      await box.add(user);
+    Box<T> box = Hive.box(className);
+    if (box.isNotEmpty) {
+      await box.putAt(0, data);
+    } else {
+      await box.add(data);
+    }
   }
 
-  AppUser? readAppUser() {
+  T? readData<T extends HiveObject>(String className) {
     try {
-      Hive.openBox<AppUser>("user");
+      Hive.openBox<T>(className);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
-    Box<AppUser> box = Hive.box('user');
-    AppUser? user = box.get(0);
-    return user;
+    Box<T> box = Hive.box(className);
+    T? data = box.get(0);
+    return data;
   }
 
-  void deleteBoxes() {
-    Box<AppUser> box = Hive.box('user');
+  void deleteBoxes(String className) {
+    Box<AppUser> box = Hive.box(className);
     box.deleteFromDisk();
   }
 }

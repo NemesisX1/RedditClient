@@ -14,10 +14,11 @@ class AppUser extends HiveObject implements BaseModel {
     this.username,
   });
 
+  @override
   toJson() {
     return {
-      "username": this.username,
-      "email": this.email,
+      "username": username,
+      "email": email,
     };
   }
 
@@ -27,10 +28,5 @@ class AppUser extends HiveObject implements BaseModel {
       email: json["email"],
     );
     return user;
-  }
-
-  @override
-  String toString() {
-    return '{user:username:$username, email:$email}';
   }
 }

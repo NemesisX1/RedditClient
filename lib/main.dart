@@ -1,9 +1,10 @@
 // ignore_for_file: unused_local_variable
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redditech/models/appuser.model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:redditech/models/token.model.dart';
 import 'locator.dart';
 import 'routes.dart';
 
@@ -16,6 +17,7 @@ globalInitializer() async {
   await Hive.initFlutter();
   Hive.registerAdapter(AppUserAdapter());
   await Hive.openBox<AppUser>("user");
+  await Hive.openBox<Token>("token");
   await dotenv.load(fileName: ".env");
 }
 

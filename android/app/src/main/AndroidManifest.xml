@@ -4,6 +4,21 @@
         android:label="Redditech"
         android:icon="@mipmap/ic_launcher"
         android:name="androidx.multidex.MultiDexApplication">
+        <activity android:name="com.linusu.flutter_web_auth.CallbackActivity">
+          <intent-filter android:label="Redditech" android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data
+              android:scheme="https"
+            />
+            <data 
+              android:scheme="http"
+              android:host="redditech.app"
+              android:pathPrefix="/"
+            />
+          </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

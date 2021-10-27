@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:redditech/views/login/login.view.dart';
 import 'helpers/empty.view.dart';
 import 'views/home/home.view.dart';
 
@@ -9,6 +10,10 @@ import 'views/home/home.view.dart';
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case LoginView.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const LoginView(),
+        );
       case HomeView.routeName:
         return MaterialPageRoute(
           builder: (_) => const HomeView(),

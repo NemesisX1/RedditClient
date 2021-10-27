@@ -28,6 +28,7 @@ dependencies:
   json_annotation: ^4.0.1
   oauth2: ^2.0.0
   flutter_dotenv: ^5.0.2
+  webview_flutter: ^2.1.2
 
 dev_dependencies:
   flutter_test:
