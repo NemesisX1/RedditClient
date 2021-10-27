@@ -16,6 +16,7 @@ globalInitializer() async {
   //await Firebase.initializeApp();
   await Hive.initFlutter();
   Hive.registerAdapter(AppUserAdapter());
+  Hive.registerAdapter(TokenAdapter());
   await Hive.openBox<AppUser>("user");
   await Hive.openBox<Token>("token");
   await dotenv.load(fileName: ".env");
@@ -34,7 +35,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData lightTheme = ThemeData(
       fontFamily: 'Poppins',
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
       ),
     );

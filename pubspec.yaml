@@ -26,7 +26,6 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.0.0
   json_annotation: ^4.0.1
-  oauth2: ^2.0.0
   flutter_dotenv: ^5.0.2
   webview_flutter: ^2.1.2
 

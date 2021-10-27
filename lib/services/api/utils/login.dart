@@ -4,13 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:redditech/locator.dart';
 import 'package:redditech/models/token.model.dart';
 import 'package:redditech/services/api/api.service.dart';
-import 'package:redditech/services/api/utils/constant.dart';
 import 'package:redditech/services/local/local.service.dart';
 
 const tokenUrl = 'https://www.reddit.com/api/v1/access_token';
 
 extension Login on ApiService {
   static final _localService = locator<LocalService>();
+  static final _dio = Dio();
 
   String? getCode(String? redirectUrl) {
     code = Uri.parse(redirectUrl!).queryParameters['code'];
@@ -19,12 +19,11 @@ extension Login on ApiService {
   }
 
   Future<bool> getToken() async {
-    final dio = Dio();
     var auth = 'Basic ' + base64Encode(utf8.encode('$clientId:$clientSecret'));
     bool hasSucceed = false;
 
     try {
-      final res = await dio.post(
+      final res = await _dio.post(
         tokenUrl,
         data: FormData.fromMap({
           'grant_type': 'authorization_code',
@@ -63,7 +62,7 @@ extension Login on ApiService {
     bool hasSucceed = false;
 
     try {
-      final res = await dio.post(
+      final res = await _dio.post(
         tokenUrl,
         data: FormData.fromMap({
           'grant_type': 'refresh_token',
