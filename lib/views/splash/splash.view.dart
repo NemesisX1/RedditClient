@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:redditech/locator.dart';
 import 'package:redditech/models/token.model.dart';
@@ -58,7 +57,7 @@ class _SplashViewState extends State<SplashView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Center(
+      body: const Center(
         child: CircularProgressIndicator(
           color: Colors.white,
         ),
