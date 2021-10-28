@@ -7,25 +7,25 @@ class AppUser extends HiveObject implements BaseModel {
   @HiveField(0)
   final String? username;
   @HiveField(1)
-  final String? email;
+  final String? password;
 
   AppUser({
-    this.email,
-    this.username,
+    required this.username,
+    required this.password,
   });
 
   @override
   toJson() {
     return {
       "username": username,
-      "email": email,
+      "password": password,
     };
   }
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
     AppUser user = AppUser(
-      username: json["usrname"],
-      email: json["email"],
+      username: json["username"],
+      password: json["password"],
     );
     return user;
   }

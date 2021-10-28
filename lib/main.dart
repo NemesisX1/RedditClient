@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:redditech/helpers/constants.dart';
 import 'package:redditech/models/appuser.model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:redditech/models/token.model.dart';
@@ -34,11 +35,17 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData lightTheme = ThemeData(
-      fontFamily: 'Poppins',
-      appBarTheme: const AppBarTheme(
-        elevation: 0,
-      ),
-    );
+        fontFamily: 'Poppins',
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          iconTheme: IconThemeData(color: kViolet),
+        ),
+        colorScheme: const ColorScheme.light(
+          primary: kViolet,
+          primaryVariant: kAccentViolet,
+          secondary: kPink,
+          secondaryVariant: kRed,
+        ));
 
     ThemeData darkTheme = ThemeData(
       fontFamily: 'Poppins',

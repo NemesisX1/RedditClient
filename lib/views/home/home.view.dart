@@ -23,10 +23,10 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        children: [],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [],
+        children: [
+          Container(),
+          Container(),
+        ],
       ),
     );
   }

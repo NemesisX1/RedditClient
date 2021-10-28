@@ -17,8 +17,8 @@ class AppUserAdapter extends TypeAdapter<AppUser> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AppUser(
-      email: fields[1] as String?,
       username: fields[0] as String?,
+      password: fields[1] as String?,
     );
   }
 
@@ -29,7 +29,7 @@ class AppUserAdapter extends TypeAdapter<AppUser> {
       ..writeByte(0)
       ..write(obj.username)
       ..writeByte(1)
-      ..write(obj.email);
+      ..write(obj.password);
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:redditech/locator.dart';
+import 'package:redditech/models/appuser.model.dart';
 import 'package:redditech/models/token.model.dart';
 import 'package:redditech/services/api/api.service.dart';
 import 'package:redditech/services/local/local.service.dart';
@@ -12,83 +13,49 @@ extension Login on ApiService {
   static final _localService = locator<LocalService>();
   static final _dio = Dio();
 
-  String? getCode(String? redirectUrl) {
-    code = Uri.parse(redirectUrl!).queryParameters['code'];
-    log("code: $code");
-    return code;
-  }
-
-  Future<bool> getToken() async {
+  Future<Token> getToken(AppUser user) async {
     var auth = 'Basic ' + base64Encode(utf8.encode('$clientId:$clientSecret'));
-    bool hasSucceed = false;
+    Token? token = Token.empty();
 
     try {
       final res = await _dio.post(
         tokenUrl,
         data: FormData.fromMap({
-          'grant_type': 'authorization_code',
-          'code': code, // this is your code part
-          'redirect_uri': redirectUrl,
+          "grant_type": "password",
+          "username": user.username,
+          "password": user.password,
         }),
         options: Options(
           headers: <String, String>{
             'Accept': '*/*',
             'Authorization': auth,
+            'User-Agent': 'redditech-final/0.1 by NemesisX1',
           },
         ),
       );
 
-      if (res.statusCode! > 400) {
-        await refreshToken();
+      if ((res.data as Map<String, dynamic>).containsKey('error') ||
+          res.statusCode! > 400) {
+        throw Exception('Invalid auth data');
       } else {
-        _localService.save<Token>(
-          Token.fromJson(res.data),
-          HiveClassName.token,
-        );
+        token = Token.fromJson(res.data);
       }
-      hasSucceed = true;
     } catch (e) {
-      log(e.toString());
-      hasSucceed = true;
+      log("ApiService: getToken : " + e.toString());
     }
-    return hasSucceed;
+
+    return token!;
   }
 
-  refreshToken() async {
-    var auth = 'Basic ' + base64Encode(utf8.encode('$clientId:$clientSecret'));
-    Token? curentToken = _localService.readData<Token>(
-      HiveClassName.token,
-    );
-    bool hasSucceed = false;
+  void refreshToken(Token token) async {
+    AppUser? user = _localService.readData<AppUser>(HiveClassName.user);
 
-    try {
-      final res = await _dio.post(
-        tokenUrl,
-        data: FormData.fromMap({
-          'grant_type': 'refresh_token',
-          'refresh_token': curentToken!.refreshToken,
-        }),
-        options: Options(
-          headers: <String, String>{
-            'Accept': '*/*',
-            'Authorization': auth,
-          },
-        ),
+    if (token.hasExpired) {
+      await getToken(user!).then(
+        (value) async {
+          await _localService.save<Token>(value, HiveClassName.token);
+        },
       );
-
-      if (res.statusCode! > 400) {
-      } else {
-        _localService.save<Token>(
-          Token.fromJson(res.data),
-          HiveClassName.token,
-        );
-      }
-
-      hasSucceed = true;
-    } catch (e) {
-      log(e.toString());
-      hasSucceed = false;
     }
-    return hasSucceed;
   }
 }

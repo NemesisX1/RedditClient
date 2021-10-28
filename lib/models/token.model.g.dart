@@ -18,18 +18,27 @@ class TokenAdapter extends TypeAdapter<Token> {
     };
     return Token(
       accessToken: fields[0] as String?,
-      refreshToken: fields[1] as String?,
+      tokenType: fields[1] as String?,
+      expiresIn: fields[3] as int?,
+      createdAt: fields[2] as int?,
+      scope: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Token obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.accessToken)
       ..writeByte(1)
-      ..write(obj.refreshToken);
+      ..write(obj.tokenType)
+      ..writeByte(2)
+      ..write(obj.createdAt)
+      ..writeByte(3)
+      ..write(obj.expiresIn)
+      ..writeByte(4)
+      ..write(obj.scope);
   }
 
   @override

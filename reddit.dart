@@ -14,9 +14,9 @@ const TEST_LOGIN = {
 };
 
 // ignore: constant_identifier_names
-const SECRET_KEY = 'MMMSpIb20phoGAt4pxVjKCYZdOmHMQ';
+const SECRET_KEY = 'cZDIcwRJZoJS1yUCyoOymyeG_gg2tw';
 // ignore: constant_identifier_names
-const CLIENT_ID = 'Az-vOK6dPexd1UlQxumtNA';
+const CLIENT_ID = 'bIKGByoTSU0esBOI9rNkpg';
 
 final dio = Dio();
 
@@ -41,21 +41,21 @@ main(List<String> args) async {
   //       'Authorization': auth,
   //     },
   //   ),
-  // );
+  // ); 597206709858-tfMbbDcxcDvEpjr7ZL1PUDzZQCV6dg
 
   var auth = 'Basic ' + base64Encode(utf8.encode('$CLIENT_ID:$SECRET_KEY'));
 
   final res = await dio.post(
     'https://www.reddit.com/api/v1/access_token',
     data: FormData.fromMap({
-      'grant_type': 'refresh_token',
-      'refresh_token': '597206709858-aKDbBnfEx6-dvKeMnIbGb1tnFuik8Q',
+      "grant_type": "password",
+      "username": username,
+      "password": password,
     }),
     options: Options(
       headers: <String, String>{
         'Accept': '*/*',
         'Authorization': auth,
-        'bearer': ''
       },
     ),
   );

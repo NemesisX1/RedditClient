@@ -28,6 +28,8 @@ dependencies:
   json_annotation: ^4.0.1
   flutter_dotenv: ^5.0.2
   webview_flutter: ^2.1.2
+  gap: ^2.0.0
+  flutter_svg: ^0.23.0+1
 
 dev_dependencies:
   flutter_test:
@@ -43,6 +45,8 @@ flutter:
 
   assets:
     - assets/
+    - assets/png/
+    - assets/fonts/
     - .env
   fonts:
     - family: Poppins
