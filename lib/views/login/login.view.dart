@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
+import 'package:flutter/material.dart';
+import 'package:redditech/helpers/constants.dart';
 import 'package:redditech/helpers/enums.dart';
 import 'package:redditech/viewmodels/login.viewmodel.dart';
 import 'package:redditech/views/base.view.dart';
 import 'package:redditech/views/home/home.view.dart';
-import 'package:redditech/views/widgets/custom_text_field.widget.dart';
+import 'package:redditech/views/login/widget/auth_webview.dart';
+import 'package:gap/gap.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -18,18 +20,14 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final _formKey = GlobalKey<FormState>();
-  final _userNameController = TextEditingController();
-  final _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    return BaseView<LoginViewModel>(builder: (context, model, child) {
-      return Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
+    return BaseView<LoginViewModel>(
+      builder: (context, model, child) {
+        return Scaffold(
+          body: Container(
             padding: const EdgeInsets.symmetric(
-              horizontal: 20,
+              horizontal: kHorizontalPadding,
               vertical: 50,
             ),
             child: Column(
@@ -49,61 +47,36 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
                 const Gap(20),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                        controller: _userNameController,
-                        labelText: "Nom d'utilisateur",
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Ce champs ne peut être vide';
-                          }
-                          return null;
-                        },
-                      ),
-                      const Gap(20),
-                      CustomTextField(
-                        isSecret: true,
-                        controller: _passwordController,
-                        labelText: "Mot de passe",
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Ce champs ne peut être vide';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(20),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        await model
-                            .login(
-                          _userNameController.text,
-                          _passwordController.text,
-                        )
-                            .then((value) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                model.isLogIn
-                                    ? 'Vous êtes connecté'
-                                    : "Mauvais identifiants",
-                              ),
-                            ),
-                          );
+                      try {
+                        await _handleRedirectUri(model.login).then((value) {
                           if (model.isLogIn) {
-                            Navigator.of(context).pushNamed(HomeView.routeName);
+                            Timer(
+                              const Duration(milliseconds: 500),
+                              () {
+                                Navigator.of(context)
+                                    .pushNamed(HomeView.routeName);
+                              },
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text(
+                                  "Une erreur est survenue: vous n'êtes pas connecté"),
+                            ));
                           }
                         });
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                            "Une erreur est survenue: ${e.toString()}",
+                          )),
+                        );
                       }
                     },
                     child: model.state == ViewState.Idle
@@ -131,8 +104,23 @@ class _LoginViewState extends State<LoginView> {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Future<void> _handleRedirectUri(Function(String) callback) async {
+    try {
+      await Navigator.push<String>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const AuthWebView(),
         ),
-      );
-    });
+      ).then((value) {
+        callback(value!);
+      });
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

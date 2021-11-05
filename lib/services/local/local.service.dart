@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:redditech/models/appuser.model.dart';
 import 'package:redditech/services/base.service.dart';
 import 'package:hive/hive.dart';
 
@@ -7,7 +6,6 @@ import 'package:hive/hive.dart';
 /// A base class to interact with local storage with Hive
 
 class HiveClassName {
-  static const String user = "user";
   static const String token = "token";
 }
 
@@ -37,8 +35,10 @@ class LocalService extends BaseService {
     return data;
   }
 
-  void deleteBoxes(String className) {
-    Box<AppUser> box = Hive.box(className);
-    box.deleteFromDisk();
+  void deleteBoxes<T>(String className) {
+    try {
+      Box<T> box = Hive.box(className);
+      box.deleteFromDisk();
+    } catch (e) {}
   }
 }

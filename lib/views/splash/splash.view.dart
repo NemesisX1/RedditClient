@@ -19,7 +19,6 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (mounted) screenChooser();
   }

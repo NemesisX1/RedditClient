@@ -2,7 +2,20 @@
 import 'package:dio/dio.dart';
 import 'dart:convert';
 
+// URL where I get the token
+const BASE_URL = 'https://www.reddit.com/api/v1/';
+// URL from where I fetch data
+const OAUTH_BASE_URL = 'https://oauth.reddit.com/api/v1/me';
+
+const TEST_LOGIN = {
+  'grant_type': 'authorization_code',
+  'code': 'TprU40-yMMK4FuoWQtWUdRtVW8N2lg',
+  'redirect_uri': 'https://www.twitter.com/juniormedehou_',
+};
+
+// ignore: constant_identifier_names
 const SECRET_KEY = 'cZDIcwRJZoJS1yUCyoOymyeG_gg2tw';
+// ignore: constant_identifier_names
 const CLIENT_ID = 'bIKGByoTSU0esBOI9rNkpg';
 
 final dio = Dio();
