@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -27,11 +26,15 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   int _currentIndex = 0;
   final _localService = locator<LocalService>();
-  int _count = 50;
+  int _count = 100;
   final _scrollController = ScrollController();
   final _futureGetter = locator<HomeViewModel>();
   Future<List<Subreddit>>? _future;
   String trends = Trends.news;
+  TextEditingController? _controller = TextEditingController();
+
+  String _baby = "";
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +58,37 @@ class _HomeViewState extends State<HomeView> {
       builder: (context, model, child) {
         return Scaffold(
           appBar: AppBar(
+            title: Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+              child: Center(
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _baby = value;
+                    });
+                  },
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () {
+                        _controller!.text = "";
+                        setState(() {
+                          _baby = "";
+                        });
+                        /* Clear the search field */
+                      },
+                    ),
+                    hintText: 'Search...',
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ),
             leading: IconButton(
               onPressed: () async => Navigator.of(context).pushNamed(
                 ProfileView.routeName,
@@ -69,6 +103,8 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             actions: [
+              // Navigate to the Search Screen
+
               IconButton(
                 onPressed: () {
                   final appProvider = Provider.of<AppViewModel>(
@@ -82,7 +118,7 @@ class _HomeViewState extends State<HomeView> {
                   }
                 },
                 icon: const Icon(
-                  FontAwesomeIcons.moon,
+                  Icons.settings,
                 ),
               ),
               const Gap(10),
@@ -127,31 +163,44 @@ class _HomeViewState extends State<HomeView> {
               ),
             ],
           ),
-          body: FutureBuilder<List<Subreddit>>(
-            future: _future,
+          body: StreamBuilder<List<Subreddit>>(
+            stream: _future!.asStream(),
             builder: (_, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return ErrorWidget(snapshot);
               } else {
-                return SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  controller: _scrollController,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ...List<Widget>.generate(
-                        snapshot.data!.length,
-                        (index) => SubredditTile(
+                List<Widget> bae = List<Widget>.generate(
+                  snapshot.data!.length,
+                  (index) => snapshot.data![index].subreddit!.contains(_baby)
+                      ? SubredditTile(
                           subreddit: snapshot.data![index],
-                        ),
-                      ),
-                    ],
-                  ),
+                        )
+                      : Container(),
                 );
+                return bae
+                            .where((element) =>
+                                element.runtimeType == Container().runtimeType)
+                            .toList()
+                            .length ==
+                        bae.length
+                    ? Center(
+                        child: Text(
+                          "No subreddits in this Earth :-*",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      )
+                    : SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        controller: _scrollController,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: bae,
+                        ),
+                      );
               }
             },
           ),
@@ -183,19 +232,19 @@ class _HomeViewState extends State<HomeView> {
               BottomNavigationBarItem(
                 label: 'New',
                 icon: Icon(
-                  FontAwesomeIcons.newspaper,
+                  FontAwesomeIcons.tasks,
                 ),
               ),
               BottomNavigationBarItem(
                 label: 'Popular',
                 icon: Icon(
-                  FontAwesomeIcons.star,
+                  FontAwesomeIcons.intercom,
                 ),
               ),
               BottomNavigationBarItem(
                 label: 'Hot',
                 icon: Icon(
-                  FontAwesomeIcons.fire,
+                  FontAwesomeIcons.firefox,
                 ),
               ),
             ],

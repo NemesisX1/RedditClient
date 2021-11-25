@@ -38,7 +38,7 @@ class AuthWebViewState extends State<AuthWebView> {
     return Scaffold(
       appBar: AppBar(
         leading: const SizedBox(),
-        title: const Text('Autorisation'),
+        title: const Text('Authentication Page'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         actions: [
           _loadingProgress != 100

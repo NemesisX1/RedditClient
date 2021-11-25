@@ -24,73 +24,88 @@ class SubredditTile extends StatelessWidget {
         decoration: const BoxDecoration(
           color: Colors.white54,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          elevation: 5.0,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton(
-                  style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 1)),
-                  onPressed: () => Navigator.of(context).pushNamed(
-                    SubredditView.routeName,
-                    arguments: subreddit!.subredditNamePrefixed!,
-                  ),
-                  child: Text(
-                    subreddit!.subredditNamePrefixed!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w500,
+                Row(
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 1)),
+                      onPressed: () => Navigator.of(context).pushNamed(
+                        SubredditView.routeName,
+                        arguments: subreddit!.subredditNamePrefixed!,
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Text(
+                          subreddit!.subredditNamePrefixed!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    const Gap(10),
+                    subreddit!.subredditType! == 'public'
+                        ? const Icon(
+                            Icons.visibility,
+                            color: Colors.grey,
+                          )
+                        : const Icon(
+                            Icons.visibility_off,
+                            color: Colors.grey,
+                          ),
+                  ],
                 ),
                 const Gap(10),
-                subreddit!.subredditType! == 'public'
-                    ? const Icon(
-                        Icons.visibility,
-                        color: Colors.grey,
+                Text(
+                  subreddit!.title!.trim(),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                subreddit!.preview != null
+                    ? Column(
+                        children: [
+                          const Gap(10),
+                          CachedNetworkImage(
+                            placeholder: (_, __) {
+                              return const CircularProgressIndicator();
+                            },
+                            imageUrl: subreddit!.preview!.source!.url!,
+                            errorWidget: (_, __, ___) {
+                              return const Icon(
+                                FontAwesomeIcons.ambulance,
+                              );
+                            },
+                          ),
+                        ],
                       )
-                    : const Icon(
-                        Icons.visibility_off,
-                        color: Colors.grey,
-                      ),
+                    : Container(),
+                const Gap(10),
+                Text(
+                  subreddit!.selftext!,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                  ),
+                ),
               ],
             ),
-            const Gap(10),
-            Text(
-              subreddit!.title!.trim(),
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            subreddit!.preview != null
-                ? Column(
-                    children: [
-                      const Gap(10),
-                      CachedNetworkImage(
-                        placeholder: (_, __) {
-                          return const CircularProgressIndicator();
-                        },
-                        imageUrl: subreddit!.preview!.source!.url!,
-                        errorWidget: (_, __, ___) {
-                          return const Icon(
-                            FontAwesomeIcons.ambulance,
-                          );
-                        },
-                      ),
-                    ],
-                  )
-                : Container(),
-            const Gap(10),
-            Text(
-              subreddit!.selftext!,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 13,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

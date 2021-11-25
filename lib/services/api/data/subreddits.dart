@@ -4,7 +4,6 @@ import 'package:redditech/services/api/api.service.dart';
 import '../utils/requests.dart';
 
 class Trends {
-  static const popular = 'popular';
   static const hot = 'hot';
   static const news = 'new';
   static const random = 'random';

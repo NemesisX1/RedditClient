@@ -38,8 +38,12 @@ class _ProfileViewState extends State<ProfileView> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CachedNetworkImage(
-                  imageUrl: widget.data!['icon_img']!,
+                Container(
+                  width: 800,
+                  height: 100,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.data!['icon_img']!,
+                  ),
                 ),
                 Text(widget.data!['subreddit']['title']),
                 Text(widget.data!['subreddit']['display_name_prefixed']),

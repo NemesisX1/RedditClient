@@ -31,7 +31,7 @@ class HomeViewModel extends BaseViewModel {
       limit: limit,
       count: count,
     );
-
+    log(res.toString());
     final dataList = res['data']['children'] as List;
     log("count = $count");
     List<Subreddit> subreddits = List<Subreddit>.generate(
